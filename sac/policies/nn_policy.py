@@ -1,6 +1,7 @@
 import tensorflow as tf
 
 from rllab.core.serializable import Serializable
+import numpy as np
 
 from rllab.misc.overrides import overrides
 from sandbox.rocky.tf.policies.base import Policy
@@ -19,12 +20,22 @@ class NNPolicy(Policy, Serializable):
 
     @overrides
     def get_action(self, observation):
-        return self.get_actions(observation[None])[0], None
+        print("observation = ",observation)
+        actions = self.get_actions(observation[None])
+        if len(actions)==0:         #DEBUG
+            return np.array([float('nan'),float('nan'),float('nan')]),None
+        r = actions[0], None
+        print("get_action returns ",r)
+        return r
 
     @overrides
     def get_actions(self, observations):
+        print("nn policy = ",tf.get_default_session().sess_str)
         feeds = {self._obs_pl: observations}
         actions = tf.get_default_session().run(self._action, feeds)
+        print("self._action = ",self._action)
+        print("feeds = ",feeds)
+        print("actions = ",actions)
         return actions
 
     @overrides

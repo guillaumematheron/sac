@@ -76,6 +76,12 @@ class GMMPolicy(NNPolicy, Serializable):
         for the observations. If False, return stochastically sampled action.
         """
 
+        print("GMM policy") #DEBUG
+        if self._is_deterministic:
+            print("  -> deterministic")
+        else:
+            print("  -> stochastic")
+
         if not self._is_deterministic:
             return NNPolicy.get_action(self, obs)
 
